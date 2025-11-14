@@ -41,7 +41,10 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Create a test tenant for multi-tenant testing.
+ */
+function createTenant(): \App\Models\Central\Tenant
 {
-    // ..
+    return \App\Models\Central\Tenant::factory()->create();
 }
