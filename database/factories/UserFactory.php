@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -29,6 +32,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => UserRole::MEMBER,
+            'permissions' => null,
         ];
     }
 
@@ -39,6 +44,36 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Create an owner user.
+     */
+    public function owner(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::OWNER,
+        ]);
+    }
+
+    /**
+     * Create an admin user.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::ADMIN,
+        ]);
+    }
+
+    /**
+     * Create a member user (default).
+     */
+    public function member(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::MEMBER,
         ]);
     }
 }

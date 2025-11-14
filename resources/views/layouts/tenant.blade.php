@@ -56,7 +56,7 @@
 
                 <!-- User Menu -->
                 <div class="px-4 py-4 border-t border-gray-200">
-                    <div class="flex items-center">
+                    <div class="flex items-center mb-3">
                         <div class="flex-shrink-0">
                             <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
@@ -64,8 +64,27 @@
                         </div>
                         <div class="ml-3 flex-1">
                             <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-gray-500">{{ auth()->user()->email }}</p>
+                            <p class="text-xs text-gray-500">{{ auth()->user()->role->label() }}</p>
                         </div>
+                    </div>
+
+                    <!-- Profile & Logout Links -->
+                    <div class="space-y-1">
+                        <a href="{{ route('profile') }}" class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Profile
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                Log Out
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
