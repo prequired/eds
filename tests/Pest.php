@@ -12,7 +12,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -41,10 +41,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-/**
- * Create a test tenant for multi-tenant testing.
- */
-function createTenant(): \App\Models\Central\Tenant
+function something()
 {
-    return \App\Models\Central\Tenant::factory()->create();
+    // ..
 }

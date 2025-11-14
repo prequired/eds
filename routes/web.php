@@ -1,29 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Central Application Routes
-|--------------------------------------------------------------------------
-|
-| These routes are for the central application (Edison Tech Platform)
-| Tenant routes are in routes/tenant.php
-|
-*/
+Route::view('/', 'welcome');
 
-Route::domain(config('tenancy.central_domains.0'))->group(function () {
-    Route::get('/', function () {
-        return view('central.pages.home');
-    })->name('home');
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-    Route::get('/pricing', function () {
-        return view('central.pages.pricing');
-    })->name('pricing');
+Route::view('profile', 'profile')
+    ->middleware(['auth'])
+    ->name('profile');
 
-    Route::get('/features', function () {
-        return view('central.pages.features');
-    })->name('features');
-});
+require __DIR__.'/auth.php';
