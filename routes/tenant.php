@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
+use App\Livewire\Tenant\Projects\ProjectForm;
+use App\Livewire\Tenant\Projects\ProjectList;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -41,9 +43,9 @@ Route::middleware([
         Route::get('/clients/{client}/edit', ClientForm::class)->name('clients.edit');
 
         // Projects
-        Route::get('/projects', function () {
-            return view('tenant.projects.index');
-        })->name('projects.index');
+        Route::get('/projects', ProjectList::class)->name('projects.index');
+        Route::get('/projects/create', ProjectForm::class)->name('projects.create');
+        Route::get('/projects/{project}/edit', ProjectForm::class)->name('projects.edit');
 
         // Websites
         Route::get('/websites', function () {
