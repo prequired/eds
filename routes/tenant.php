@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Livewire\Actions\Logout;
 use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
+use App\Livewire\Tenant\Dashboard;
 use App\Livewire\Tenant\Expense\ExpenseForm;
 use App\Livewire\Tenant\Expense\ExpenseList;
 use App\Livewire\Tenant\Expense\ExpenseReports;
@@ -83,9 +84,9 @@ Route::middleware([
             ->name('password.confirm');
 
         // Dashboard
-        Route::get('/dashboard', function () {
-            return view('tenant.dashboard');
-        })->middleware('verified')->name('dashboard');
+        Route::get('/dashboard', Dashboard::class)
+            ->middleware('verified')
+            ->name('dashboard');
 
         // Profile & Logout
         Route::view('profile', 'profile')
