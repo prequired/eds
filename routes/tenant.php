@@ -6,7 +6,9 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Livewire\Actions\Logout;
 use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
+use App\Livewire\Tenant\Invoice\InvoiceForm;
 use App\Livewire\Tenant\Invoice\InvoiceList;
+use App\Livewire\Tenant\Invoice\InvoiceView;
 use App\Livewire\Tenant\Projects\ProjectForm;
 use App\Livewire\Tenant\Projects\ProjectList;
 use App\Livewire\Tenant\Team\InviteMember;
@@ -110,5 +112,8 @@ Route::middleware([
 
         // Invoices
         Route::get('/invoices', InvoiceList::class)->name('invoices.index');
+        Route::get('/invoices/create', InvoiceForm::class)->name('invoices.create');
+        Route::get('/invoices/{invoice}', InvoiceView::class)->name('invoices.view');
+        Route::get('/invoices/{invoice}/edit', InvoiceForm::class)->name('invoices.edit');
     });
 });
