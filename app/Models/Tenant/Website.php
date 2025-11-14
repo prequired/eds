@@ -43,6 +43,10 @@ class Website extends Model
         'lighthouse_checked_at',
         'settings',
         'notes',
+        'notification_emails',
+        'notify_on_downtime',
+        'notify_on_recovery',
+        'last_notified_at',
     ];
 
     protected $casts = [
@@ -58,6 +62,10 @@ class Website extends Model
         'lighthouse_seo' => 'integer',
         'response_time_ms' => 'integer',
         'settings' => 'array',
+        'notification_emails' => 'array',
+        'notify_on_downtime' => 'boolean',
+        'notify_on_recovery' => 'boolean',
+        'last_notified_at' => 'datetime',
         'archived_at' => 'datetime',
     ];
 
