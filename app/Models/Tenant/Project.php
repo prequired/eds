@@ -2,6 +2,8 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\ProjectPriority;
+use App\Enums\ProjectStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +34,8 @@ class Project extends Model
     ];
 
     protected $casts = [
+        'status' => ProjectStatus::class,
+        'priority' => ProjectPriority::class,
         'budget_cents' => 'integer',
         'estimated_hours' => 'decimal:2',
         'actual_hours' => 'decimal:2',
