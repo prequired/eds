@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Livewire\Tenant\Clients\ClientList;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -34,9 +35,7 @@ Route::middleware([
         })->name('dashboard');
 
         // Clients
-        Route::get('/clients', function () {
-            return view('tenant.clients.index');
-        })->name('clients.index');
+        Route::get('/clients', ClientList::class)->name('clients.index');
 
         // Projects
         Route::get('/projects', function () {
