@@ -20,7 +20,7 @@ class InviteMember extends Component
 
     public array $customPermissions = [];
 
-    public function save(): void
+    public function save()
     {
         // Check permission
         if (!auth()->user()->can('team.manage')) {

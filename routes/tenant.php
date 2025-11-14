@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Livewire\Actions\Logout;
 use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
+use App\Livewire\Tenant\Invoice\InvoiceList;
 use App\Livewire\Tenant\Projects\ProjectForm;
 use App\Livewire\Tenant\Projects\ProjectList;
 use App\Livewire\Tenant\Team\InviteMember;
@@ -106,5 +107,8 @@ Route::middleware([
         // Team Management
         Route::get('/team', TeamList::class)->name('team.index');
         Route::get('/team/invite', InviteMember::class)->name('team.invite');
+
+        // Invoices
+        Route::get('/invoices', InvoiceList::class)->name('invoices.index');
     });
 });
