@@ -2,6 +2,10 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\DeploymentStatus;
+use App\Enums\UptimeStatus;
+use App\Enums\WebsiteEnvironment;
+use App\Enums\WebsiteStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +45,10 @@ class Website extends Model
     ];
 
     protected $casts = [
+        'environment' => WebsiteEnvironment::class,
+        'status' => WebsiteStatus::class,
+        'deployment_status' => DeploymentStatus::class,
+        'uptime_status' => UptimeStatus::class,
         'last_deployed_at' => 'datetime',
         'last_checked_at' => 'datetime',
         'lighthouse_checked_at' => 'datetime',
@@ -66,17 +74,17 @@ class Website extends Model
     // Accessors
     public function getIsOnlineAttribute(): bool
     {
-        return $this->uptime_status === 'up';
+        return $this->uptime_status === UptimeStatus::UP;
     }
 
     // Scopes
     public function scopeActive($query)
     {
-        return $query->where('status', 'active');
+        return $query->where('status', WebsiteStatus::ACTIVE->value);
     }
 
     public function scopeOnline($query)
     {
-        return $query->where('uptime_status', 'up');
+        return $query->where('uptime_status', UptimeStatus::UP->value);
     }
 }
