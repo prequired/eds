@@ -8,6 +8,7 @@ use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
 use App\Livewire\Tenant\Expense\ExpenseForm;
 use App\Livewire\Tenant\Expense\ExpenseList;
+use App\Livewire\Tenant\Expense\ExpenseReports;
 use App\Livewire\Tenant\Invoice\InvoiceForm;
 use App\Livewire\Tenant\Invoice\InvoiceList;
 use App\Livewire\Tenant\Invoice\InvoiceView;
@@ -128,5 +129,6 @@ Route::middleware([
         Route::get('/expenses', ExpenseList::class)->name('expenses.index');
         Route::get('/expenses/create', ExpenseForm::class)->name('expenses.create');
         Route::get('/expenses/{expense}/edit', ExpenseForm::class)->name('expenses.edit');
+        Route::get('/expenses/reports', ExpenseReports::class)->name('expenses.reports');
     });
 });
