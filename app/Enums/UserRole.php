@@ -27,7 +27,7 @@ enum UserRole: string
                 'websites.*',
                 'tickets.*',
                 'invoices.view',
-                'team.view',
+                'team.*',
                 'settings.view',
             ],
             self::MEMBER => [
@@ -38,6 +38,7 @@ enum UserRole: string
                 'tickets.view',
                 'tickets.create',
                 'time_entries.*',
+                'team.view',
             ],
         };
     }

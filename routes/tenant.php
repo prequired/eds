@@ -8,6 +8,8 @@ use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
 use App\Livewire\Tenant\Projects\ProjectForm;
 use App\Livewire\Tenant\Projects\ProjectList;
+use App\Livewire\Tenant\Team\InviteMember;
+use App\Livewire\Tenant\Team\TeamList;
 use App\Livewire\Tenant\Websites\WebsiteForm;
 use App\Livewire\Tenant\Websites\WebsiteList;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +55,10 @@ Route::middleware([
 
         Volt::route('reset-password/{token}', 'pages.auth.reset-password')
             ->name('password.reset');
+
+        // Team invitation acceptance (guest route)
+        Volt::route('invitations/accept/{token}', 'pages.invitations.accept')
+            ->name('invitations.accept');
     });
 
     // Authenticated routes
@@ -96,5 +102,9 @@ Route::middleware([
         Route::get('/websites', WebsiteList::class)->name('websites.index');
         Route::get('/websites/create', WebsiteForm::class)->name('websites.create');
         Route::get('/websites/{website}/edit', WebsiteForm::class)->name('websites.edit');
+
+        // Team Management
+        Route::get('/team', TeamList::class)->name('team.index');
+        Route::get('/team/invite', InviteMember::class)->name('team.invite');
     });
 });
