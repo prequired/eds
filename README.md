@@ -1,6 +1,6 @@
 # Edison Tech Platform
 
-**Version:** 1.0 (Phase 1-2 Complete - Authentication Integrated)
+**Version:** 1.0 (Phase 1-3 Complete - Team Management Integrated)
 **Status:** 🚧 In Development
 **Specification:** S-Tier - Board Approved
 
@@ -13,11 +13,11 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 ### Key Features
 - ✅ **Multi-Tenant Architecture** (Database-per-tenant isolation)
 - ✅ **Authentication & RBAC** (Owner, Admin, Member roles with custom permissions)
+- ✅ **Team Management** (User invitations, role assignment, member management)
 - ✅ **Client Management** (Complete CRUD with UI)
 - ✅ **Project Management** (Complete CRUD with UI)
 - ✅ **Website Management** (Complete CRUD with monitoring-ready UI)
 - ✅ **Website Monitoring** (Uptime, performance, Lighthouse scores, email notifications)
-- 🚧 **Team Management** (User invitations, role management)
 - 🚧 **Deployment Integration** (Laravel Forge, GitHub Actions)
 - 🚧 **Automated Invoicing**
 - 🚧 **Client Portal**
@@ -79,6 +79,7 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 
 **Tenant Database:**
 - [x] \`User\` - Tenant users with roles and permissions
+- [x] \`TeamInvitation\` - Team member invitations with token-based acceptance
 - [x] \`Client\` - Client management with billing info
 - [x] \`Project\` - Project tracking with budget/timeline
 - [x] \`Website\` - Website monitoring & deployment
@@ -87,7 +88,7 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 ### ✅ Database Migrations
 
 **Central:** tenants, domains
-**Tenant:** users, password_reset_tokens, sessions, clients, projects, websites, uptime_checks
+**Tenant:** users, password_reset_tokens, sessions, team_invitations, clients, projects, websites, uptime_checks
 
 ### ✅ Client Management (CRUD Complete)
 
@@ -281,6 +282,102 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
   - Custom permission overrides
   - Integration with Laravel authorization
 
+### ✅ Team Management System
+
+**Team Invitation Model:**
+- [x] \`TeamInvitation\` model with UUID primary keys
+- [x] Secure token-based invitation system (64-character random tokens)
+- [x] 7-day expiration by default
+- [x] Tracks invited_by user and acceptance status
+- [x] Helper methods: \`isPending()\`, \`isExpired()\`, \`isAccepted()\`
+- [x] Query scopes: \`pending()\`, \`expired()\`, \`accepted()\`
+
+**Team Invitation Actions:**
+- [x] \`SendTeamInvitationAction\` - Create and send invitations
+  - Validates no existing user with email
+  - Validates no pending invitation exists
+  - Generates secure random token
+  - Sets 7-day expiration
+  - Dispatches TeamInvitationSent event
+- [x] \`AcceptTeamInvitationAction\` - Accept invitation and create user
+  - Validates invitation not expired or already accepted
+  - Creates new user with invited role and permissions
+  - Auto-verifies email (trusted invitation)
+  - Marks invitation as accepted
+  - Dispatches TeamInvitationAccepted event
+  - Auto-login after acceptance
+- [x] \`CancelTeamInvitationAction\` - Cancel pending invitations
+  - Validates invitation not already accepted
+  - Deletes invitation
+
+**Team Management Events:**
+- [x] \`TeamInvitationSent\` - Dispatched when invitation is created
+- [x] \`TeamInvitationAccepted\` - Dispatched when user accepts and account created
+
+**Team Notifications:**
+- [x] \`TeamInvitationNotification\` - Email notification with invite link
+  - Queued for async delivery (ShouldQueue)
+  - Includes inviter name and organization
+  - Shows assigned role with description
+  - 7-day expiration warning
+  - Secure accept invitation link
+- [x] \`SendTeamInvitationEmail\` - Event listener
+  - Listens to TeamInvitationSent events
+  - Routes to anonymous notifiable (email)
+  - Fetches organization name from tenant
+  - Queued for performance
+
+**Team Management UI:**
+- [x] \`TeamList\` component - Comprehensive team member management
+  - **Tabbed Interface:** Team Members | Pending Invitations
+  - **Real-time Search:** Debounced search across name and email
+  - **Team Members Table:**
+    - Avatar display with user initials
+    - Color-coded role badges (Owner: purple, Admin: blue, Member: gray)
+    - Join date and email verification status
+    - Edit and remove actions (permission-gated)
+  - **Pending Invitations Table:**
+    - Email, role, invited by, expiration time
+    - Resend and cancel invitation actions
+    - Permission checks for \`team.manage\`
+  - **Pagination:** For both members and invitations
+  - **Empty States:** Helpful CTAs when no data
+- [x] \`InviteMember\` component - Team member invitation form
+  - Email input with validation
+  - Role dropdown (Owner, Admin, Member)
+  - Inline role descriptions
+  - Information callout about invitation details
+  - Permission validation (\`team.manage\` required)
+  - Success/error notifications
+- [x] **Accept Invitation Page** (Volt component)
+  - Token-based invitation validation
+  - Expired/invalid invitation detection
+  - User registration form (name, password, confirmation)
+  - Auto-login after acceptance
+  - Email verification bypass (trusted invitation)
+  - Redirect to dashboard
+
+**Database Schema:**
+- [x] \`team_invitations\` table with UUID primary keys
+- [x] Indexed email, token, and acceptance status
+- [x] Foreign key to users (invited_by)
+- [x] Cascade delete on inviter deletion
+- [x] Expires_at and accepted_at timestamps
+
+**Team Permissions:**
+- [x] **Owner:** Full team management (\`team.*\`)
+- [x] **Admin:** Full team management (\`team.*\`)
+- [x] **Member:** View team members only (\`team.view\`)
+
+**Data Transfer Objects (DTOs):**
+- [x] \`SendTeamInvitationData\` - Email, role, custom permissions
+- [x] \`AcceptTeamInvitationData\` - Name, password, password confirmation
+
+**Routes:**
+- [x] \`/team\` - Team member list and invitations
+- [x] \`/team/invite\` - Invite new team member
+- [x] \`/invitations/accept/{token}\` - Accept invitation (guest route)
+
 ### ✅ User Interface
 
 **Layouts:**
@@ -294,6 +391,7 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 - [x] \`ClientList\` + \`ClientForm\` - Complete client management UI
 - [x] \`ProjectList\` + \`ProjectForm\` - Complete project management UI
 - [x] \`WebsiteList\` + \`WebsiteForm\` - Complete website management with monitoring UI
+- [x] \`TeamList\` + \`InviteMember\` - Complete team management and invitation UI
 
 **UI Features:**
 - Search functionality (debounced, case-insensitive PostgreSQL \`ilike\`)
@@ -308,11 +406,13 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 - [x] Central application routes (\`routes/web.php\`) - Landing page only
 - [x] Tenant application routes (\`routes/tenant.php\`) with full Livewire integration:
   - **Auth:** \`/login\`, \`/register\`, \`/forgot-password\`, \`/reset-password/{token}\`, \`/verify-email\`, \`/logout\`
+  - **Invitations:** \`/invitations/accept/{token}\` (guest route)
   - **Dashboard:** \`/dashboard\` (verified users only)
   - **Profile:** \`/profile\`
   - **Clients:** \`/clients\`, \`/clients/create\`, \`/clients/{client}/edit\`
   - **Projects:** \`/projects\`, \`/projects/create\`, \`/projects/{project}/edit\`
   - **Websites:** \`/websites\`, \`/websites/create\`, \`/websites/{website}/edit\`
+  - **Team:** \`/team\`, \`/team/invite\`
 
 ---
 
@@ -427,16 +527,25 @@ routes/
 - [x] Comprehensive test coverage (9 RBAC tests)
 - [x] **Total Test Count: 43+ tests passing**
 
-### Phase 3: Team Management 🚧 IN PROGRESS
-- [ ] User invitation system (email invites with tokens)
-- [ ] Team member management UI
-- [ ] Role assignment and editing
-- [ ] Custom permission assignment
-- [ ] Activity logging for team actions
-- [ ] User deactivation and removal
-- [ ] Team member list with filtering
+### Phase 3: Team Management ✅ COMPLETE
+- [x] User invitation system (email invites with secure tokens)
+- [x] Team member management UI (tabbed interface)
+- [x] Role assignment during invitation (Owner, Admin, Member)
+- [x] Custom permission overrides per user
+- [x] Team member list with search and filtering
+- [x] Pending invitations management (resend, cancel)
+- [x] Accept invitation page with user registration
+- [x] Email notifications for invitations
+- [x] Auto-login after invitation acceptance
+- [x] Permission-gated team management (\`team.manage\`, \`team.view\`)
+- [x] Event-driven architecture (TeamInvitationSent, TeamInvitationAccepted)
+- [x] 7-day invitation expiration
+- [ ] User role editing - Future
+- [ ] User deactivation and removal - Future
+- [ ] Activity logging for team actions - Future
+- [x] **Total Test Count: 43+ tests passing**
 
-### Phase 4: Invoicing & Billing
+### Phase 4: Invoicing & Billing 🚧 NEXT
 - [ ] Invoice generation
 - [ ] Stripe integration
 - [ ] Recurring billing
