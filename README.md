@@ -152,6 +152,51 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
   - Repository provider dropdown (GitHub, GitLab, Bitbucket)
   - Deployment method dropdown (Forge, GitHub Actions, etc.)
 
+### ✅ Website Monitoring & Performance (Phase 2 - Complete)
+
+**Uptime Monitoring:**
+- [x] \`CheckWebsiteUptimeAction\` - HTTP health checks with retry logic
+  - Real-time UP/DOWN status detection
+  - Response time tracking in milliseconds
+  - Error message capture for debugging
+  - Transaction-wrapped updates with event dispatch
+- [x] \`UptimeCheck\` model - Historical uptime data tracking
+  - Indexed queries for efficient data retrieval
+  - Relationship with Website model
+  - Helper methods: wasSuccessful(), failed()
+- [x] \`WebsiteUptimeChanged\` event - Status change notifications
+  - wentDown() and cameUp() helper methods
+  - Ready for email/Slack notification integration
+
+**Lighthouse Performance:**
+- [x] \`CheckWebsiteLighthouseAction\` - Google PageSpeed Insights integration
+  - Performance, Accessibility, SEO score tracking (0-100)
+  - Configurable API key support
+  - 60-second timeout for complete Lighthouse runs
+- [x] \`WebsiteLighthouseUpdated\` event - Score change tracking
+  - performanceImproved() and performanceDegraded() detection
+  - hasCriticalScores() for scores below 50
+  - Ready for performance alert notifications
+
+**Scheduled Jobs (Cron):**
+- [x] \`websites:check-uptime\` - Runs every 5 minutes
+  - Multi-tenant support across all agencies
+  - Progress bar with real-time feedback
+  - Summary statistics (total, up, down)
+  - Options: --tenant, --limit
+- [x] \`websites:check-lighthouse\` - Runs daily at 2 AM
+  - Rate limiting with 2-second delays
+  - Average score calculation and reporting
+  - Alerts for low performance scores
+  - Options: --tenant, --limit
+
+**Testing:**
+- [x] \`UptimeMonitoringTest\` - 8 comprehensive test cases
+  - HTTP fake responses for reliability
+  - Success/failure scenarios
+  - Event dispatching verification
+  - Historical data tracking
+
 ### ✅ User Interface
 
 **Layouts:**
@@ -259,16 +304,22 @@ routes/
 - [x] Website CRUD (Actions, DTOs, Events, UI)
 - [x] Comprehensive UI with Livewire 3
 - [x] Type-safe enums throughout
-- [x] Full test coverage (17 tests passing)
+- [x] Full test coverage (25+ tests passing)
 
-### Phase 2: Monitoring & Integration (Weeks 9-12) 🚧 IN PROGRESS
-- [ ] Uptime monitoring (cron jobs, webhooks)
-- [ ] Lighthouse performance scoring integration
-- [ ] Deployment integration (Laravel Forge API)
-- [ ] GitHub Actions integration
-- [ ] Response time tracking
-- [ ] SSL certificate monitoring
-- [ ] DNS health checks
+### Phase 2: Monitoring & Integration ✅ CORE COMPLETE
+- [x] Uptime monitoring (cron jobs, HTTP health checks)
+- [x] Lighthouse performance scoring integration (Google PageSpeed Insights)
+- [x] Response time tracking (millisecond precision)
+- [x] Historical data tracking (UptimeCheck model)
+- [x] Event-driven architecture (WebsiteUptimeChanged, WebsiteLighthouseUpdated)
+- [x] Scheduled jobs (every 5 minutes for uptime, daily for Lighthouse)
+- [x] Multi-tenant monitoring across all agencies
+- [x] Comprehensive test coverage (8 uptime monitoring tests)
+- [ ] Deployment integration (Laravel Forge API) - Future
+- [ ] GitHub Actions deployment webhooks - Future
+- [ ] SSL certificate expiration monitoring - Future
+- [ ] DNS health checks - Future
+- [ ] Email/Slack notifications on downtime - Future
 
 ### Phase 3: Invoicing & Billing (Weeks 13-16)
 - [ ] Invoice generation
