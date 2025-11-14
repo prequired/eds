@@ -97,6 +97,9 @@ Route::middleware([
             return redirect()->route('login');
         })->name('logout');
 
+        // Notifications
+        Route::get('/notifications', \App\Livewire\Tenant\NotificationList::class)->name('notifications.index');
+
         // Clients
         Route::get('/clients', ClientList::class)->name('clients.index');
         Route::get('/clients/create', ClientForm::class)->name('clients.create');
