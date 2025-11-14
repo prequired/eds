@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Livewire\Actions\Logout;
 use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
+use App\Livewire\Tenant\Expense\ExpenseForm;
+use App\Livewire\Tenant\Expense\ExpenseList;
 use App\Livewire\Tenant\Invoice\InvoiceForm;
 use App\Livewire\Tenant\Invoice\InvoiceList;
 use App\Livewire\Tenant\Invoice\InvoiceView;
@@ -121,5 +123,10 @@ Route::middleware([
         // Time Tracking
         Route::get('/time-tracking', TimeEntryList::class)->name('time-tracking.index');
         Route::get('/time-tracking/reports', TimeReports::class)->name('time-tracking.reports');
+
+        // Expenses
+        Route::get('/expenses', ExpenseList::class)->name('expenses.index');
+        Route::get('/expenses/create', ExpenseForm::class)->name('expenses.create');
+        Route::get('/expenses/{expense}/edit', ExpenseForm::class)->name('expenses.edit');
     });
 });
