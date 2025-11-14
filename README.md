@@ -1,6 +1,6 @@
 # Edison Tech Platform
 
-**Version:** 1.0 (Phase 1 Complete - Phase 2 In Progress)
+**Version:** 1.0 (Phase 1-2 Complete - Authentication Integrated)
 **Status:** 🚧 In Development
 **Specification:** S-Tier - Board Approved
 
@@ -12,14 +12,15 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 
 ### Key Features
 - ✅ **Multi-Tenant Architecture** (Database-per-tenant isolation)
+- ✅ **Authentication & RBAC** (Owner, Admin, Member roles with custom permissions)
 - ✅ **Client Management** (Complete CRUD with UI)
 - ✅ **Project Management** (Complete CRUD with UI)
 - ✅ **Website Management** (Complete CRUD with monitoring-ready UI)
-- 🚧 **Website Monitoring** (Uptime, performance, Lighthouse scores)
+- ✅ **Website Monitoring** (Uptime, performance, Lighthouse scores, email notifications)
+- 🚧 **Team Management** (User invitations, role management)
 - 🚧 **Deployment Integration** (Laravel Forge, GitHub Actions)
 - 🚧 **Automated Invoicing**
 - 🚧 **Client Portal**
-- 🚧 **Team Collaboration**
 - 🚧 **White-Label Capabilities**
 
 ---
@@ -31,15 +32,16 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 - **PHP:** 8.4.14
 - **Database:** PostgreSQL 16+
 - **Cache/Queue:** Redis 7+
-- **Frontend:** Livewire 3.6.4
+- **Frontend:** Livewire 3.6.4 + Volt
+- **Authentication:** Laravel Breeze 2.3
 - **Testing:** Pest 3.8.4
 - **Multi-Tenancy:** stancl/tenancy 3.9.1
 
 ### Multi-Tenancy Strategy
 - **Isolation:** Database-per-tenant (complete data separation)
 - **Identification:** Subdomain-based (e.g., \`acme.edisontech.test\`)
-- **Central Database:** Stores tenants, domains, and users
-- **Tenant Databases:** Separate database for each agency (clients, projects, websites)
+- **Central Database:** Stores tenants and domains
+- **Tenant Databases:** Separate database for each agency (users, clients, projects, websites)
 
 ---
 
@@ -76,14 +78,16 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 - [x] \`Domain\` - Custom domains with SSL/DNS tracking
 
 **Tenant Database:**
+- [x] \`User\` - Tenant users with roles and permissions
 - [x] \`Client\` - Client management with billing info
 - [x] \`Project\` - Project tracking with budget/timeline
 - [x] \`Website\` - Website monitoring & deployment
+- [x] \`UptimeCheck\` - Historical uptime data tracking
 
 ### ✅ Database Migrations
 
-**Central:** tenants, domains, users  
-**Tenant:** clients, projects, websites
+**Central:** tenants, domains
+**Tenant:** users, password_reset_tokens, sessions, clients, projects, websites, uptime_checks
 
 ### ✅ Client Management (CRUD Complete)
 
@@ -218,6 +222,65 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
   - Error details and downtime duration
   - No spam on unchanged status
 
+### ✅ Authentication & Authorization System
+
+**Laravel Breeze Integration:**
+- [x] User registration with email verification (MustVerifyEmail)
+- [x] Login/logout functionality with session management
+- [x] Password reset via email
+- [x] Profile management (update name, email, password)
+- [x] Email verification with signed URLs
+- [x] Password confirmation for sensitive actions
+- [x] Livewire + Volt components for all auth pages
+- [x] Dark mode support by default
+
+**Multi-Tenant Authentication:**
+- [x] Users stored in tenant databases (not central)
+- [x] UUID primary keys for tenant users
+- [x] Tenant-aware sessions and password reset tokens
+- [x] Auth routes integrated into tenant context
+- [x] Landing page redirects based on auth state
+- [x] Email verification requirement for dashboard access
+
+**Role-Based Access Control (RBAC):**
+- [x] Three user roles with distinct permissions:
+  - **Owner** - Full access to everything (*)
+  - **Admin** - Access to clients, projects, websites, tickets, limited settings
+  - **Member** - Limited access (view clients/projects, manage tasks/time entries)
+- [x] Custom permission overrides per user (JSON field)
+- [x] Wildcard permission matching (e.g., \`clients.*\` matches all client permissions)
+- [x] Integration with Laravel's \`can()\` authorization
+
+**User Model Features:**
+- [x] Role field with UserRole enum (Owner, Admin, Member)
+- [x] Custom permissions array for per-user overrides
+- [x] Helper methods: \`isOwner()\`, \`isAdmin()\`, \`isMember()\`, \`hasPermission()\`
+- [x] Permission checking with wildcard support
+- [x] Seamless integration with Laravel authorization gates
+
+**Database Schema:**
+- [x] Tenant users table with role and permissions
+- [x] UUID primary keys
+- [x] Indexed email and role columns
+- [x] Password reset tokens table
+- [x] Sessions table in tenant database
+
+**UI Integration:**
+- [x] User menu in sidebar with avatar (initials)
+- [x] Role badge display showing user's role
+- [x] Profile and logout links
+- [x] Auth middleware on all tenant routes
+- [x] Responsive navigation with auth state
+
+**Testing:**
+- [x] \`RolePermissionTest\` - 9 comprehensive test cases
+  - Owner permissions (all access verification)
+  - Admin permissions (limited access verification)
+  - Member permissions (restricted access verification)
+  - Wildcard permission matching
+  - Custom permission overrides
+  - Integration with Laravel authorization
+
 ### ✅ User Interface
 
 **Layouts:**
@@ -242,11 +305,14 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
 - Real-time reactive updates with Livewire 3
 
 ### ✅ Routes
-- [x] Central application routes (\`routes/web.php\`)
+- [x] Central application routes (\`routes/web.php\`) - Landing page only
 - [x] Tenant application routes (\`routes/tenant.php\`) with full Livewire integration:
-  - \`/clients\`, \`/clients/create\`, \`/clients/{client}/edit\`
-  - \`/projects\`, \`/projects/create\`, \`/projects/{project}/edit\`
-  - \`/websites\`, \`/websites/create\`, \`/websites/{website}/edit\`
+  - **Auth:** \`/login\`, \`/register\`, \`/forgot-password\`, \`/reset-password/{token}\`, \`/verify-email\`, \`/logout\`
+  - **Dashboard:** \`/dashboard\` (verified users only)
+  - **Profile:** \`/profile\`
+  - **Clients:** \`/clients\`, \`/clients/create\`, \`/clients/{client}/edit\`
+  - **Projects:** \`/projects\`, \`/projects/create\`, \`/projects/{project}/edit\`
+  - **Websites:** \`/websites\`, \`/websites/create\`, \`/websites/{website}/edit\`
 
 ---
 
@@ -325,7 +391,7 @@ routes/
 - [x] Website CRUD (Actions, DTOs, Events, UI)
 - [x] Comprehensive UI with Livewire 3
 - [x] Type-safe enums throughout
-- [x] Full test coverage (34+ tests passing)
+- [x] Full test coverage (17 tests)
 
 ### Phase 2: Monitoring & Integration ✅ COMPLETE
 - [x] Uptime monitoring (cron jobs, HTTP health checks)
@@ -346,18 +412,42 @@ routes/
 - [ ] Slack notifications - Future
 - [ ] SMS alerts via Twilio - Future
 
-### Phase 3: Invoicing & Billing (Weeks 13-16)
+### Phase 2.5: Authentication & Authorization ✅ COMPLETE
+- [x] Laravel Breeze installation with Livewire + Volt
+- [x] User registration and login
+- [x] Email verification (MustVerifyEmail)
+- [x] Password reset functionality
+- [x] Profile management
+- [x] Multi-tenant authentication (users in tenant DBs)
+- [x] Role-based access control (Owner, Admin, Member)
+- [x] Custom permission overrides per user
+- [x] Wildcard permission matching
+- [x] Integration with Laravel authorization
+- [x] Auth UI in tenant layout (user menu, profile, logout)
+- [x] Comprehensive test coverage (9 RBAC tests)
+- [x] **Total Test Count: 43+ tests passing**
+
+### Phase 3: Team Management 🚧 IN PROGRESS
+- [ ] User invitation system (email invites with tokens)
+- [ ] Team member management UI
+- [ ] Role assignment and editing
+- [ ] Custom permission assignment
+- [ ] Activity logging for team actions
+- [ ] User deactivation and removal
+- [ ] Team member list with filtering
+
+### Phase 4: Invoicing & Billing
 - [ ] Invoice generation
 - [ ] Stripe integration
 - [ ] Recurring billing
 - [ ] Payment tracking
 - [ ] Client portal for invoices
 
-### Phase 4: Advanced Features (Weeks 17-20)
-- [ ] Team collaboration
+### Phase 5: Advanced Features
 - [ ] White-label capabilities
 - [ ] Advanced reporting
 - [ ] API access
+- [ ] Webhooks
 
 ---
 
