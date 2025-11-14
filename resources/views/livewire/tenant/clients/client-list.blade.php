@@ -14,6 +14,15 @@
                 </svg>
                 Filters
             </button>
+            <a
+                href="{{ route('clients.create') }}"
+                wire:navigate
+                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Client
+            </a>
         </div>
     </div>
 
@@ -151,9 +160,18 @@
 
                 <!-- Actions -->
                 <div class="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
-                    <span class="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer">
-                        View Details →
-                    </span>
+                    <div class="flex items-center space-x-3">
+                        <a
+                            href="{{ route('clients.edit', $client) }}"
+                            wire:navigate
+                            class="text-sm font-medium text-blue-600 hover:text-blue-800"
+                        >
+                            Edit
+                        </a>
+                        <span class="text-sm font-medium text-gray-400 cursor-pointer">
+                            View Details →
+                        </span>
+                    </div>
                     <button
                         wire:click="archive('{{ $client->id }}')"
                         wire:confirm="Are you sure you want to archive this client?"
@@ -184,6 +202,19 @@
                 Get started by adding your first client.
             @endif
         </p>
+        @if(!$search)
+        <div class="mt-6">
+            <a
+                href="{{ route('clients.create') }}"
+                wire:navigate
+                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Your First Client
+            </a>
+        </div>
+        @endif
     </div>
     @endif
 </div>

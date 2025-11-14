@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Livewire\Tenant\Clients\ClientForm;
 use App\Livewire\Tenant\Clients\ClientList;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -36,6 +37,8 @@ Route::middleware([
 
         // Clients
         Route::get('/clients', ClientList::class)->name('clients.index');
+        Route::get('/clients/create', ClientForm::class)->name('clients.create');
+        Route::get('/clients/{client}/edit', ClientForm::class)->name('clients.edit');
 
         // Projects
         Route::get('/projects', function () {
