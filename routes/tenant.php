@@ -10,6 +10,8 @@ use App\Livewire\Tenant\Invoice\InvoiceForm;
 use App\Livewire\Tenant\Invoice\InvoiceList;
 use App\Livewire\Tenant\Invoice\InvoiceView;
 use App\Livewire\Tenant\Projects\ProjectForm;
+use App\Livewire\Tenant\TimeEntry\TimeEntryList;
+use App\Livewire\Tenant\TimeEntry\TimeReports;
 use App\Livewire\Tenant\Projects\ProjectList;
 use App\Livewire\Tenant\Team\InviteMember;
 use App\Livewire\Tenant\Team\TeamList;
@@ -115,5 +117,9 @@ Route::middleware([
         Route::get('/invoices/create', InvoiceForm::class)->name('invoices.create');
         Route::get('/invoices/{invoice}', InvoiceView::class)->name('invoices.view');
         Route::get('/invoices/{invoice}/edit', InvoiceForm::class)->name('invoices.edit');
+
+        // Time Tracking
+        Route::get('/time-tracking', TimeEntryList::class)->name('time-tracking.index');
+        Route::get('/time-tracking/reports', TimeReports::class)->name('time-tracking.reports');
     });
 });
