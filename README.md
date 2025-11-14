@@ -190,12 +190,33 @@ Edison Tech Platform is a comprehensive **multi-tenant SaaS application** design
   - Alerts for low performance scores
   - Options: --tenant, --limit
 
+**Notifications:**
+- [x] \`WebsiteDownNotification\` - Email alerts when websites go down
+  - Includes error message, response time, environment
+  - Queued for async delivery (ShouldQueue)
+  - Supports multiple recipients via notification_emails array
+  - Action button to view website details
+- [x] \`WebsiteRecoveredNotification\` - Email alerts when websites recover
+  - Includes downtime duration calculation
+  - Success-styled email (green theme)
+  - Queued for performance
+- [x] \`SendWebsiteUptimeNotifications\` - Event listener
+  - Listens to WebsiteUptimeChanged events
+  - Respects notify_on_downtime and notify_on_recovery settings
+  - Routes to anonymous notifiables (no User model required)
+  - Updates last_notified_at timestamp
+
 **Testing:**
 - [x] \`UptimeMonitoringTest\` - 8 comprehensive test cases
   - HTTP fake responses for reliability
   - Success/failure scenarios
   - Event dispatching verification
   - Historical data tracking
+- [x] \`WebsiteNotificationsTest\` - 9 comprehensive test cases
+  - Downtime/recovery notification delivery
+  - Configuration respect (emails, settings)
+  - Error details and downtime duration
+  - No spam on unchanged status
 
 ### ✅ User Interface
 
@@ -304,9 +325,9 @@ routes/
 - [x] Website CRUD (Actions, DTOs, Events, UI)
 - [x] Comprehensive UI with Livewire 3
 - [x] Type-safe enums throughout
-- [x] Full test coverage (25+ tests passing)
+- [x] Full test coverage (34+ tests passing)
 
-### Phase 2: Monitoring & Integration ✅ CORE COMPLETE
+### Phase 2: Monitoring & Integration ✅ COMPLETE
 - [x] Uptime monitoring (cron jobs, HTTP health checks)
 - [x] Lighthouse performance scoring integration (Google PageSpeed Insights)
 - [x] Response time tracking (millisecond precision)
@@ -314,12 +335,16 @@ routes/
 - [x] Event-driven architecture (WebsiteUptimeChanged, WebsiteLighthouseUpdated)
 - [x] Scheduled jobs (every 5 minutes for uptime, daily for Lighthouse)
 - [x] Multi-tenant monitoring across all agencies
-- [x] Comprehensive test coverage (8 uptime monitoring tests)
+- [x] Email notifications on downtime and recovery
+- [x] Configurable notification settings per website
+- [x] Queued notifications for performance
+- [x] Comprehensive test coverage (17 monitoring & notification tests)
 - [ ] Deployment integration (Laravel Forge API) - Future
 - [ ] GitHub Actions deployment webhooks - Future
 - [ ] SSL certificate expiration monitoring - Future
 - [ ] DNS health checks - Future
-- [ ] Email/Slack notifications on downtime - Future
+- [ ] Slack notifications - Future
+- [ ] SMS alerts via Twilio - Future
 
 ### Phase 3: Invoicing & Billing (Weeks 13-16)
 - [ ] Invoice generation
